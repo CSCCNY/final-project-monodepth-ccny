@@ -6,7 +6,6 @@ import os
 import keras
 
 class dataloader_rgbd(tf.keras.utils.Sequence): #
-    
     def __init__(self, dataset_path, batch_size, image_size=128, shuffle=False):
         self.rgb_images = os.listdir(str(str(dataset_path)+'/rgb/'))
         self.rgb_images.sort()

@@ -52,6 +52,3 @@ if len(argv) > 1:
 else:
     print("\nPlease define the model you want to train and number of epochs!")
     print("Command Example: python3 train.py unet128 30\n")
-
-
-    

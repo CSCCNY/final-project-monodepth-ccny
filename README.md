@@ -10,7 +10,7 @@ Team members:
 - [Santosh Suwal]( )
 
 
-Reading Materials
+## Reading Materials ##
 
 - [Original U-Net paper](https://arxiv.org/pdf/1505.04597.pdf) describes the basic architecture we use for 
   the depth prediction.
@@ -21,3 +21,14 @@ Desribes a self-supervised method, see occlusion loss.
 - [D3V0](https://arxiv.org/pdf/2003.01060.pdf) Describes depth and pose estimation network.
 
 
+## Deployment Instructions ##
+
+Requires `python3.8`, `pip3`, `pipenv` to fetch dependencies automatically.
+
+1. Clone repository and install dependencies.
+```shell
+git clone git@github.com:CSCCNY/final-project-monodepth-ccny.git
+cd final-project-monodepth-ccny
+pipenv install  # Installs dependencies
+pipenv shell  # Enter virtual environment
+```

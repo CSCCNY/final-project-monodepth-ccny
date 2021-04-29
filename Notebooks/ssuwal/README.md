@@ -6,6 +6,7 @@
 FINAL-PROJECT-MONODEPTH-CCNY\NOTEBOOKS\SSUWAL
 │   depth_estimation_using_UNET.ipynb
 │   model.png
+|   resnet34-unet-large-dataset.ipynb
 │   resnet34-unet.ipynb
 │   resnet34-unet.png
 │   resnet50_encoder_unet.ipynb
@@ -26,6 +27,11 @@ FINAL-PROJECT-MONODEPTH-CCNY\NOTEBOOKS\SSUWAL
 2. model.png
 
     Figure of ResNet50 Unet implementation model graph.
+
+3. resnet34-unet-large-dataset.ipynb
+
+    Unet implementation with ResNet34 as Encoder.Trained 50 epochs on large dataset with 1600+ images.
+    [Dataset](https://dimlrgbd.github.io/#section-sampledata)
 
 3. resnet34-unet.ipynb
 

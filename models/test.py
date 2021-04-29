@@ -10,7 +10,7 @@ import numpy as np
 import os
  
   
-dataset_path = '/tmp/Projects2021/rgbd_dataset/dataset2/'
+dataset_path = '/tmp/Projects2021/rgbd_dataset/dataset1/'
 argv = sys.argv
 
 if argv[1] == 'unet128':

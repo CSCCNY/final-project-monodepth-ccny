@@ -1,3 +1,4 @@
 .ipynb_checkpoints
 depth
 rgb
+*.jupyterlab-workspace

@@ -8,8 +8,8 @@ def ssim(y_true, y_pred):
     img2 = y_pred
     # img1 = y_true.numpy()
     # img2 = y_pred.numpy()
-    # img1 = tf.convert_to_tensor(img1, dtype=tf.float32)
-    # img2 = tf.convert_to_tensor(img2, dtype=tf.float32)
+    img1 = tf.convert_to_tensor(img1, dtype=tf.float64)
+    img2 = tf.convert_to_tensor(img2, dtype=tf.float64)
     img1 = img1.astype(np.float64)
     img2 = img2.astype(np.float64)
     
@@ -33,7 +33,7 @@ def ssim(y_true, y_pred):
     return ssim_map.mean()
 
 
-depth_image1 = cv2.imread('/home/ehoxha/Projects2021/rgbd_dataset/dataset2/depth/d1.png', -1)
-depth_image2 = cv2.imread('/home/ehoxha/Projects2021/rgbd_dataset/dataset2/depth/d2.png', -1)
+depth_image1 = cv2.imread('/tmp/Projects2021/rgbd_dataset/dataset2/depth/d1.png', -1)
+depth_image2 = cv2.imread('/tmp/Projects2021/rgbd_dataset/dataset2/depth/d2.png', -1)
 
 # print(ssim(depth_image1, depth_image2))

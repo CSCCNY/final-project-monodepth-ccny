@@ -4,13 +4,13 @@ sys.path.insert(1, '/tmp/Projects2021/depth_estimation/final-project-monodepth-c
 from ssim_loss import *
 from dataloaders import *
 from unet128 import unet128
-from unet256_v2 import unet256_v2
+from unet256 import unet256
 from res50 import res50
 from keras.callbacks import ModelCheckpoint
 from keras.optimizers import Adam
 import matplotlib.pyplot as plt
 
-dataset_path = '/tmp/Projects2021/rgbd_dataset/dataset1/'
+dataset_path = '/tmp/Projects2021/rgbd_dataset/Driveway2/170721_C0'
 argv = sys.argv
 
 if len(argv) > 1:
@@ -21,7 +21,7 @@ if len(argv) > 1:
                                     save_best_only=True)
 
         m = unet128(input_shape=[128, 128, 3])
-        m.model.compile(optimizer='adam', loss=ssim_loss())
+        m.model.compile(optimizer='adam', loss='mse')
         m.model.summary()
         m.model.fit(dtloader, epochs=int(argv[2]), callbacks=[checkpoint])
 
@@ -31,7 +31,7 @@ if len(argv) > 1:
                                     monitor='loss',
                                     save_best_only=True)
 
-        m = unet256_v2(input_shape=[256, 256, 3])
+        m = unet256(input_shape=[256, 256, 3])
         m.model.compile(optimizer='adam', loss='mse')
         m.model.summary()
         m.model.fit(dtloader, epochs=int(argv[2]), callbacks=[checkpoint])
@@ -43,7 +43,8 @@ if len(argv) > 1:
                                     save_best_only=True)
 
         m = res50(input_shape=(128, 128, 3))
-        m.model.compile(optimizer='adam', loss='mse')
+        opt = Adam(0.001)
+        m.model.compile(optimizer=opt, loss='mse')
         m.model.summary()
         m.model.fit(dtloader, epochs=int(argv[2]), callbacks=[checkpoint])
     else:

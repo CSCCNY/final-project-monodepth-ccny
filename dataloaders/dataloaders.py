@@ -14,22 +14,22 @@ class dataloader_rgbd(tf.keras.utils.Sequence): #
         self.depth_images = os.listdir(str(str(dataset_path)+'/depth/'))
         self.depth_images.sort()
         self.depth_images = [str(str(dataset_path)+'/depth/') + file for file in self.depth_images]
-
+        
         # Shuffle later
         self.batch_size = batch_size
         self.shuffle = shuffle
         self.image_size = image_size
-        self.min_depth = 999999
-        self.max_depth = 0
-        for depthimg in self.depth_images:
-            depth = cv2.imread(depthimg, -1)
-            depth = cv2.resize(depth, (self.image_size, self.image_size))
-            mx = np.max(depth)
-            mn = np.min(depth)
-            if mx > self.max_depth:
-                self.max_depth = mx
-            if mn < self.min_depth:
-                self.min_depth = mn
+        # self.min_depth = 999999
+        # self.max_depth = 0
+        # for depthimg in self.depth_images:
+        #     depth = cv2.imread(depthimg, -1)
+        #     depth = cv2.resize(depth, (self.image_size, self.image_size))
+        #     mx = np.max(depth)
+        #     mn = np.min(depth)
+        #     if mx > self.max_depth:
+        #         self.max_depth = mx
+        #     if mn < self.min_depth:
+        #         self.min_depth = mn
         self.on_epoch_end()
 
     def on_epoch_end(self):
@@ -56,6 +56,8 @@ class dataloader_rgbd(tf.keras.utils.Sequence): #
         for depth_file in depth_imgs:
             depth_image = cv2.imread(depth_file, -1)
             depth_image = cv2.resize(depth_image, (self.image_size, self.image_size))
+            d_mean = np.nanmean(depth_image)
+            depth_image = np.where(depth_image == 0, d_mean, depth_image )
             depth_image = depth_image/np.max(depth_image) #(depth_image-self.min_depth)/(self.max_depth - self.min_depth)
             depth_images.append(depth_image)
             

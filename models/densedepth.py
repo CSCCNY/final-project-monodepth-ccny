@@ -30,6 +30,7 @@ from io import BytesIO
 
 """## Model Architecture ##"""
 
+
 class UpscaleBlock(Model):
     def __init__(self, filters, name):
         super(UpscaleBlock, self).__init__()
@@ -91,7 +92,9 @@ class DepthEstimate(Model):
     def call(self, x):
         return self.decoder(self.encoder(x))
 
+
 """## Loss Function ##"""
+
 
 def depth_loss_function(y_true, y_pred, theta=0.1, maxDepthVal=1000.0 / 10.0):
     # Point-wise depth
@@ -112,26 +115,32 @@ def depth_loss_function(y_true, y_pred, theta=0.1, maxDepthVal=1000.0 / 10.0):
 
     return (w1 * l_ssim) + (w2 * K.mean(l_edges)) + (w3 * K.mean(l_depth))
 
+
 """## Data Loaders ##"""
 
 from zipfile import ZipFile
 from PIL import Image
 
+
 # Path to nyu depth dataset root directory.
 def extract_zip(input_zip: str):
-    input_zip=ZipFile(input_zip)
+    input_zip = ZipFile(input_zip)
     return {name: input_zip.read(name) for name in input_zip.namelist()}
+
 
 def nyu_resize(img, resolution=128):
     from skimage.transform import resize
-    return resize(img, (resolution, resolution), preserve_range=True, mode='reflect', anti_aliasing=True )
-    #return resize(img, (resolution, int(resolution*4/3)), preserve_range=True, mode='reflect', anti_aliasing=True )
+    return resize(img, (resolution, resolution), preserve_range=True, mode='reflect', anti_aliasing=True)
+    # return resize(img, (resolution, int(resolution*4/3)), preserve_range=True, mode='reflect', anti_aliasing=True )
+
 
 def get_nyu_data(batch_size, nyu_data_zipfile='/home/slava/downloads/nyu_data.zip'):
     data = extract_zip(nyu_data_zipfile)
 
-    nyu2_train = list((row.split(',') for row in (data['data/nyu2_train.csv']).decode("utf-8").split('\n') if len(row) > 0))
-    nyu2_test = list((row.split(',') for row in (data['data/nyu2_test.csv']).decode("utf-8").split('\n') if len(row) > 0))
+    nyu2_train = list(
+        (row.split(',') for row in (data['data/nyu2_train.csv']).decode("utf-8").split('\n') if len(row) > 0))
+    nyu2_test = list(
+        (row.split(',') for row in (data['data/nyu2_test.csv']).decode("utf-8").split('\n') if len(row) > 0))
 
     # shape_rgb = (batch_size, 480, 640, 3)
     # shape_depth = (batc
@@ -145,16 +154,21 @@ def get_nyu_data(batch_size, nyu_data_zipfile='/home/slava/downloads/nyu_data.zi
 
     return data, nyu2_train, nyu2_test, shape_rgb, shape_depth
 
+
 def get_nyu_train_test_data(batch_size):
     data, nyu2_train, nyu2_test, shape_rgb, shape_depth = get_nyu_data(batch_size)
 
-    train_generator = NYU_BasicAugmentRGBSequence(data, nyu2_train, batch_size=batch_size, shape_rgb=shape_rgb, shape_depth=shape_depth)
-    test_generator = NYU_BasicRGBSequence(data, nyu2_test, batch_size=batch_size, shape_rgb=shape_rgb, shape_depth=shape_depth)
+    train_generator = NYU_BasicAugmentRGBSequence(data, nyu2_train, batch_size=batch_size, shape_rgb=shape_rgb,
+                                                  shape_depth=shape_depth)
+    test_generator = NYU_BasicRGBSequence(data, nyu2_test, batch_size=batch_size, shape_rgb=shape_rgb,
+                                          shape_depth=shape_depth)
 
     return train_generator, test_generator
 
+
 class NYU_BasicAugmentRGBSequence(tf.keras.utils.Sequence):
-    def __init__(self, data, dataset, batch_size, shape_rgb, shape_depth, is_flip=False, is_addnoise=False, is_erase=False):
+    def __init__(self, data, dataset, batch_size, shape_rgb, shape_depth, is_flip=False, is_addnoise=False,
+                 is_erase=False):
         self.data = data
         self.dataset = dataset
         # self.policy = BasicPolicy( color_change_ratio=0.50, mirror_ratio=0.50, flip_ratio=0.0 if not is_flip else 0.2, 
@@ -173,27 +187,30 @@ class NYU_BasicAugmentRGBSequence(tf.keras.utils.Sequence):
         return int(np.ceil(self.N / float(self.batch_size)))
 
     def __getitem__(self, idx, is_apply_policy=True):
-        batch_x, batch_y = np.zeros( self.shape_rgb ), np.zeros( self.shape_depth )
-        
+        batch_x, batch_y = np.zeros(self.shape_rgb), np.zeros(self.shape_depth)
+
         # Augmentation of RGB images
         for i in range(batch_x.shape[0]):
-            index = min((idx * self.batch_size) + i, self.N-1)
+            index = min((idx * self.batch_size) + i, self.N - 1)
 
             sample = self.dataset[index]
 
-            x = np.clip(np.asarray(Image.open( BytesIO(self.data[sample[0]]) )).reshape(480,640,3)/255,0,1)
-            y = np.clip(np.asarray(Image.open( BytesIO(self.data[sample[1]]) )).reshape(480,640,1)/255*self.maxDepth,0,self.maxDepth)
+            x = np.clip(np.asarray(Image.open(BytesIO(self.data[sample[0]]))).reshape(480, 640, 3) / 255, 0, 1)
+            y = np.clip(
+                np.asarray(Image.open(BytesIO(self.data[sample[1]]))).reshape(480, 640, 1) / 255 * self.maxDepth, 0,
+                self.maxDepth)
             y = self.maxDepth / y
 
-            batch_x[i] = nyu_resize(x, 128) # 480
-            batch_y[i] = nyu_resize(y, 64) #
+            batch_x[i] = nyu_resize(x, 128)  # 480
+            batch_y[i] = nyu_resize(y, 64)  #
 
             # if is_apply_policy: batch_x[i], batch_y[i] = self.policy(batch_x[i], batch_y[i])
 
         return batch_x, batch_y
 
+
 class NYU_BasicRGBSequence(tf.keras.utils.Sequence):
-    def __init__(self, data, dataset, batch_size,shape_rgb, shape_depth):
+    def __init__(self, data, dataset, batch_size, shape_rgb, shape_depth):
         self.data = data
         self.dataset = dataset
         self.batch_size = batch_size
@@ -206,15 +223,17 @@ class NYU_BasicRGBSequence(tf.keras.utils.Sequence):
         return int(np.ceil(self.N / float(self.batch_size)))
 
     def __getitem__(self, idx):
-        batch_x, batch_y = np.zeros( self.shape_rgb ), np.zeros( self.shape_depth )
-        
-        for i in range(self.batch_size):            
-            index = min((idx * self.batch_size) + i, self.N-1)
+        batch_x, batch_y = np.zeros(self.shape_rgb), np.zeros(self.shape_depth)
+
+        for i in range(self.batch_size):
+            index = min((idx * self.batch_size) + i, self.N - 1)
 
             sample = self.dataset[index]
 
-            x = np.clip(np.asarray(Image.open( BytesIO(self.data[sample[0]]))).reshape(480,640,3)/255,0,1)
-            y = np.asarray(Image.open(BytesIO(self.data[sample[1]])), dtype=np.float32).reshape(480,640,1).copy().astype(float) / 10.0
+            x = np.clip(np.asarray(Image.open(BytesIO(self.data[sample[0]]))).reshape(480, 640, 3) / 255, 0, 1)
+            y = np.asarray(Image.open(BytesIO(self.data[sample[1]])), dtype=np.float32).reshape(480, 640,
+                                                                                                1).copy().astype(
+                float) / 10.0
             y = self.maxDepth / y
 
             print(x, y)
@@ -224,13 +243,17 @@ class NYU_BasicRGBSequence(tf.keras.utils.Sequence):
 
         return batch_x, batch_y
 
+
 def get_nyu_train_test_data(batch_size):
     data, nyu2_train, nyu2_test, shape_rgb, shape_depth = get_nyu_data(batch_size)
 
-    train_generator = NYU_BasicAugmentRGBSequence(data, nyu2_train, batch_size=batch_size, shape_rgb=shape_rgb, shape_depth=shape_depth)
-    test_generator = NYU_BasicRGBSequence(data, nyu2_test, batch_size=batch_size, shape_rgb=shape_rgb, shape_depth=shape_depth)
+    train_generator = NYU_BasicAugmentRGBSequence(data, nyu2_train, batch_size=batch_size, shape_rgb=shape_rgb,
+                                                  shape_depth=shape_depth)
+    test_generator = NYU_BasicRGBSequence(data, nyu2_test, batch_size=batch_size, shape_rgb=shape_rgb,
+                                          shape_depth=shape_depth)
 
     return train_generator, test_generator
+
 
 """## Train ##
 
@@ -242,41 +265,46 @@ To get cuda working:
  export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda/lib64
  ```
 """
+if __name__ == "__main__":
+    if 'session' in locals() and session is not None:
+        print('Close interactive session')
+        session.close()
 
-if 'session' in locals() and session is not None:
-    print('Close interactive session')
-    session.close()
+    physical_devices = tf.config.list_physical_devices('GPU')
+    tf.config.experimental.set_memory_growth(physical_devices[0], True)
 
-physical_devices = tf.config.list_physical_devices('GPU') 
-tf.config.experimental.set_memory_growth(physical_devices[0], True)
+    model = DepthEstimate()
+    #model(tf.keras.Input(128, 128, 3))
+    """Load nyu depth data. See definition of `get_nyu_data` to specify path."""
 
-model = DepthEstimate()
+    # from google.colab import drive
+    # drive.mount('/content/drive')
 
-"""Load nyu depth data. See definition of `get_nyu_data` to specify path."""
+    train_generator, test_generator = get_nyu_train_test_data(32)
 
-#from google.colab import drive
-#drive.mount('/content/drive')
+    """#### Callbacks ####
+    
+    1. Learning rate scheduler -- model doesn't gets stuck.
+    2. Checkpoint -- save model every once in a while.
+    """
 
-train_generator, test_generator = get_nyu_train_test_data(32)
+    callbacks = []
 
-"""#### Callbacks ####
+    # Callback: Learning Rate Scheduler
+    lr_schedule = tf.keras.callbacks.ReduceLROnPlateau(monitor='val_loss', factor=0.7, patience=5, min_lr=0.00009,
+                                                       min_delta=1e-2)
+    callbacks.append(lr_schedule)  # reduce learning rate when stuck
 
-1. Learning rate scheduler -- model doesn't gets stuck.
-2. Checkpoint -- save model every once in a while.
-"""
+    # Callback: save checkpoints
+    callbacks.append(
+        tf.keras.callbacks.ModelCheckpoint('checkpoint/weights.{epoch:02d}-{val_loss:.2f}.hdf5', monitor='val_loss',
+                                           verbose=1, save_best_only=False, save_weights_only=False, mode='min',
+                                           save_freq="epoch"))
 
-callbacks = []
+    optimizer = Adam(lr=0.0001, amsgrad=True)
 
-# Callback: Learning Rate Scheduler
-lr_schedule = tf.keras.callbacks.ReduceLROnPlateau(monitor='val_loss', factor=0.7, patience=5, min_lr=0.00009, min_delta=1e-2)
-callbacks.append( lr_schedule ) # reduce learning rate when stuck
+    model.compile(loss=depth_loss_function, optimizer=optimizer)
+    # model.load_weights("checkpoint/weights.10-0.12.hdf5")
+    model.fit(train_generator, callbacks=callbacks, validation_data=test_generator, epochs=20, shuffle=True)
 
-# Callback: save checkpoints
-callbacks.append(tf.keras.callbacks.ModelCheckpoint('checkpoint/weights.{epoch:02d}-{loss:.2f}.hdf5', monitor='val_loss', 
-    verbose=1, save_best_only=False, save_weights_only=False, mode='min', save_freq=5))
-
-optimizer = Adam(lr=0.0001, amsgrad=True)
-
-model.compile(loss=depth_loss_function, optimizer=optimizer)
-
-model.fit(train_generator, callbacks=callbacks, validation_data=test_generator, epochs=20, shuffle=True)
+    model.save("checkpoint/model.tf", save_format="tf")

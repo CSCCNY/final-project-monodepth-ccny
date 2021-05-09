@@ -1,3 +1,8 @@
+.ipynb_checkpoints
+depth
+rgb
+*.jupyterlab-workspace
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 
@@ -24,7 +29,10 @@ __pypackages__/
 .venv
 env/
 venv/
+<<<<<<< HEAD
+=======
 
 
 # Results Folder
 results/
+>>>>>>> ehoxha

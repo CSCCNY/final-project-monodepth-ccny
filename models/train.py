@@ -25,13 +25,16 @@ def ssmi_loss1(y_true, y_pred):
                             k1=0.01,
                             k2=0.03)
     loss1 = tf.keras.losses.mean_squared_error(y_true, y_pred)
+    # loss3 = tf.keras.losses.mean_absolute_error(y_true, y_pred)
     loss2 = tf.reduce_mean(1-ssim)
-    return loss2*0.8+loss1*0.2
+    return loss2*0.7+loss1*0.3
 
 if len(argv) > 1:
     if argv[1] == 'unet128':
+        if argv[3] == 'indoor':
+            dataset_path = '/tmp/Projects2021/rgbd_dataset/indoor'
         dtloader = dataloader_rgbd(dataset_path, 8, image_size=[128, 128, 1])
-        checkpoint = ModelCheckpoint('best_model128.hdf5',
+        checkpoint = ModelCheckpoint('unet128_indoor.hdf5',
                                     monitor='loss',
                                     save_best_only=True)
 
@@ -43,7 +46,18 @@ if len(argv) > 1:
     elif argv[1] == 'unet256':
         if argv[3] == 'indoor':
             dataset_path = '/tmp/Projects2021/rgbd_dataset/indoor'
-            # dtloader = dataloader_rgbd(dataset_path, 8, image_size=[256, 256, 1])
+            dtloader = dataloader_rgbd(dataset_path, 20, image_size=[256, 256, 1])
+            checkpoint = ModelCheckpoint('unet256_indoor20.hdf5',
+                                        monitor='loss',
+                                        save_best_only=True)
+
+            m = unet256(input_shape=[256, 256, 3])
+            m.model.compile(optimizer='adam', loss=ssmi_loss1)
+            m.model.summary()
+            m.model.fit(dtloader, epochs=int(argv[2]), callbacks=[checkpoint])
+            
+        elif argv[3] == 'indoor_fft':
+            dataset_path = '/tmp/Projects2021/rgbd_dataset/indoor'
             dtloader = dataloader_rgbdfft(dataset_path, 8, image_size=[256, 256, 1])
             checkpoint = ModelCheckpoint('indoor_fft_unet256.hdf5',
                                         monitor='loss',
@@ -53,9 +67,10 @@ if len(argv) > 1:
             m.model.compile(optimizer='adam', loss=ssmi_loss1)
             m.model.summary()
             m.model.fit(dtloader, epochs=int(argv[2]), callbacks=[checkpoint])
+            
         else:
-            dtloader = dataloader_rgbd(dataset_path, 8, image_size=[256, 256, 1])
-            checkpoint = ModelCheckpoint('best_model256.hdf5',
+            dtloader = dataloader_rgbd(dataset_path, 20, image_size=[256, 256, 1])
+            checkpoint = ModelCheckpoint('unet256_outdoor.hdf5',
                                         monitor='loss',
                                         save_best_only=True)
 
@@ -65,14 +80,14 @@ if len(argv) > 1:
             m.model.fit(dtloader, epochs=int(argv[2]), callbacks=[checkpoint])
 
     elif argv[1] == 'res50':
-        dtloader = dataloader_rgbd(dataset_path, 8, image_size=128)
-        checkpoint = ModelCheckpoint('best_modelres50.hdf5',
+        dataset_path = '/tmp/Projects2021/rgbd_dataset/indoor'
+        dtloader = dataloader_rgbd(dataset_path, 40, image_size=[256, 256, 1])
+        checkpoint = ModelCheckpoint('res50_indoor.hdf5',
                                     monitor='loss',
                                     save_best_only=True)
 
         m = res50(input_shape=(128, 128, 3))
-        opt = Adam(0.001)
-        m.model.compile(optimizer=opt, loss='mse')
+        m.model.compile(optimizer='adam', loss=ssmi_loss1)
         m.model.summary()
         m.model.fit(dtloader, epochs=int(argv[2]), callbacks=[checkpoint])
     else:

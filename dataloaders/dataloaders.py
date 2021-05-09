@@ -126,7 +126,6 @@ class dataloader_rgbdfft(tf.keras.utils.Sequence): #
         return self.__get_data(self.rgb_images[0:38], self.depth_images[0:38])
     
     
-    
 class DataGenerator(keras.utils.Sequence):
   
   def __init__(self, batch_size = 8, image_size = 128):

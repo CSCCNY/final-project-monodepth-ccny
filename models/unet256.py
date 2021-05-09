@@ -103,11 +103,11 @@ class unet256(object):
 
         bn = self.bottleneck(p6, filters[6])
 
-        u1 = self.up_block(bn, c6, filters[3]) # 4   -> 8
-        u2 = self.up_block(u1, c5, filters[2]) # 8   -> 16
-        u3 = self.up_block(u2, c4, filters[1]) # 16  -> 32
-        u4 = self.up_block(u3, c3, filters[0]) # 32  -> 64
-        u5 = self.up_block(u4, c2, filters[0]) # 64  -> 128
+        u1 = self.up_block(bn, c6, filters[5]) # 4   -> 8
+        u2 = self.up_block(u1, c5, filters[4]) # 8   -> 16
+        u3 = self.up_block(u2, c4, filters[3]) # 16  -> 32
+        u4 = self.up_block(u3, c3, filters[2]) # 32  -> 64
+        u5 = self.up_block(u4, c2, filters[1]) # 64  -> 128
         u6 = self.up_block(u5, c1, filters[0]) # 128 -> 256
 
         outputs = Conv2D(1, kernel_size=(1,1), padding='same', activation='sigmoid')(u6)

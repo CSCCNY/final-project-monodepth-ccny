@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 import os
 
-dataset_path = '/home/ehoxha/Projects2021/rgbd_dataset/indoor'
+dataset_path = '/home/ehoxha/Projects2021/rgbd_dataset/indoor_test'
 rgb_images = os.listdir(str(str(dataset_path)+'/rgb/'))
 rgb_images.sort()
 rgb_images = [str(str(dataset_path)+'/rgb/') + file for file in rgb_images]

@@ -8,19 +8,25 @@ import cv2
 import matplotlib.pyplot as plt
 import numpy as np
 import os
- 
-    
-dataset_path = '/tmp/Projects2021/rgbd_dataset/indoor_test'
-model =  keras.models.load_model('unet128_indoor.hdf5', compile=False)
-dtloader = dataloader_rgbd(dataset_path, 8, image_size=[128, 128])
-X_test, y_test = dtloader.get_testing_sample()
+
+#dataset_path = '/tmp/Projects2021/rgbd_dataset/indoor_test'
+#dtloader = dataloader_rgbd(dataset_path, 8, image_size=[128, 128, 3])
+#X_test, y_test = dtloader.get_testing_sample()
+#model =  keras.models.load_model('res50_nyu_128x128.hdf5', compile=False)
+
+dataset_path = '/tmp/Projects2021/rgbd_dataset/nyu_data/'
+model =  keras.models.load_model('res50_nyu_128x128.hdf5', compile=False)
+data = nyu2_dataloader(dataset_path, 20, image_size=[128, 128, 3])
+X_test, y_test = data.get_nyu2_test_data(dataset_path, num_of_images = 10)
 preds = model.predict(X_test)
-file_names = dtloader.depth_images
 for i in range(len(preds)):
     prds1 = np.reshape(preds[i], newshape=(preds[i].shape[0]*preds[i].shape[1]))
     pr = (np.reshape(prds1, newshape=(128, 128))*255)
-    img_predicted = np.zeros((128, 128, 3))
-    img_predicted[:,:,0] = pr
-    img_predicted[:,:,1] = pr
-    img_predicted[:,:,2] = pr
-    cv2.imwrite('depth_pred/d{0}.png'.format(i+1), np.array(img_predicted, dtype=np.int16))
+    plt.imshow(np.array(pr, dtype=np.int16), cmap='magma')
+    plt.axis("off")
+    plt.savefig('res128x128/d_magma_{0}.png'.format(i), dpi=200, format='png')
+    # img_predicted = np.zeros((128, 128, 3))
+    # img_predicted[:,:,0] = pr
+    # img_predicted[:,:,1] = pr
+    # img_predicted[:,:,2] = pr
+    cv2.imwrite('res128x128/d{0}.png'.format(i), np.array(pr, dtype=np.int16))                

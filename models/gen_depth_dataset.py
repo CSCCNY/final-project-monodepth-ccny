@@ -8,7 +8,6 @@ import cv2
 import matplotlib.pyplot as plt
 import numpy as np
 import os
-    
 
 #dataset_path = '/tmp/Projects2021/rgbd_dataset/indoor_test'
 #dtloader = dataloader_rgbd(dataset_path, 8, image_size=[128, 128, 3])

@@ -24,8 +24,7 @@ def ssmi_loss1(y_true, y_pred):
                             filter_size=11,
                             filter_sigma=1.5,
                             k1=0.01,
-                            k2=0.03)
-    
+                            k2=0.03)    
     loss1 = tf.reduce_mean(1-ssim)
     loss2 = tf.keras.losses.mean_absolute_error(y_true, y_pred)
     loss3 = tf.keras.losses.mean_squared_error(y_true, y_pred)

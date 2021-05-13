@@ -59,31 +59,38 @@
 # # m.model.compile(optimizer='adam', loss=ssim_loss())
 # # m.model.summary()
 # # m.model.fit(X_train, y_train, epochs=20,callbacks=[checkpoint])
-
-
-import sys
-sys.path.insert(1, '/tmp/Projects2021/depth_estimation/final-project-monodepth-ccny/dataloaders/')
-from dataloaders import dataloader_rgbd
-import numpy as np
 import cv2
-import os
+import numpy as np
+depth_img = cv2.imread('2.png', cv2.IMREAD_UNCHANGED)
+depth_img = cv2.resize(depth_img, (256, 128))
+depth_img = np.rot90(depth_img)
+cv2.imshow('depth',depth_img)
+print(depth_img.shape)
+cv2.waitKey(0)
+cv2.destroyAllWindows()
+# import sys
+# sys.path.insert(1, '/tmp/Projects2021/depth_estimation/final-project-monodepth-ccny/dataloaders/')
+# from dataloaders import dataloader_rgbd
+# import numpy as np
+# import cv2
+# import os
 
 
-dataset_path = '/tmp/Projects2021/rgbd_dataset/indoor_test'
-dtloader = dataloader_rgbd(dataset_path, 8, image_size=[128, 128])
-X_test, y_test = dtloader.get_testing_sample()
+# dataset_path = '/tmp/Projects2021/rgbd_dataset/nyu_data/'
+# dtloader = nyu2_dataloader(dataset_path, 8, image_size=[256, 128])
+# X_test, y_test = dtloader.get_testing_sample()
 
-dataset_path2 = '/tmp/Projects2021/depth_estimation/final-project-monodepth-ccny/extrascripts/depth_pred/'
-depth_images = os.listdir(dataset_path2)
-depth_images.sort()
-depth_images = [str(dataset_path2) + file for file in depth_images]
-image_main = np.array([])
-for i, depth_file in enumerate(depth_images):
-    depth_img = cv2.imread(depth_file)
-    depth_orig = y_test[i]
-    depth_img = np.concatenate((depth_img, depth_orig), axis=1)
-    image_main = np.append(image_main, depth_img)
-    if i > 8:
-        break
+# dataset_path2 = '/tmp/Projects2021/depth_estimation/final-project-monodepth-ccny/extrascripts/depth_pred/'
+# depth_images = os.listdir(dataset_path2)
+# depth_images.sort()
+# depth_images = [str(dataset_path2) + file for file in depth_images]
+# image_main = np.array([])
+# for i, depth_file in enumerate(depth_images):
+#     depth_img = cv2.imread(depth_file)
+#     depth_orig = y_test[i]
+#     depth_img = np.concatenate((depth_img, depth_orig), axis=1)
+#     image_main = np.append(image_main, depth_img)
+#     if i > 8:
+#         break
     
-cv2.write('res_figure1.png', image_main)
+# cv2.write('res_figure1.png', image_main)

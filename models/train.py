@@ -6,6 +6,7 @@ from dataloaders import *
 from unet128 import unet128
 from unet256 import unet256
 from res50 import res50
+from res50_v2 import res50_v2
 from keras.callbacks import ModelCheckpoint
 from keras.optimizers import Adam
 import matplotlib.pyplot as plt
@@ -24,10 +25,11 @@ def ssmi_loss1(y_true, y_pred):
                             filter_sigma=1.5,
                             k1=0.01,
                             k2=0.03)
-    loss1 = tf.keras.losses.mean_squared_error(y_true, y_pred)
-    # loss3 = tf.keras.losses.mean_absolute_error(y_true, y_pred)
-    loss2 = tf.reduce_mean(1-ssim)
-    return loss2*0.7+loss1*0.3
+    
+    loss1 = tf.reduce_mean(1-ssim)
+    loss2 = tf.keras.losses.mean_absolute_error(y_true, y_pred)
+    loss3 = tf.keras.losses.mean_squared_error(y_true, y_pred)
+    return 0.7*loss1+loss2*0.15+0.15*loss3
 
 if len(argv) > 1:
     if argv[1] == 'unet128':
@@ -80,16 +82,20 @@ if len(argv) > 1:
             m.model.fit(dtloader, epochs=int(argv[2]), callbacks=[checkpoint])
 
     elif argv[1] == 'res50':
-        dataset_path = '/tmp/Projects2021/rgbd_dataset/indoor'
-        dtloader = dataloader_rgbd(dataset_path, 40, image_size=[256, 256, 1])
-        checkpoint = ModelCheckpoint('res50_indoor.hdf5',
+        # from tensorflow.keras.callbacks import TensorBoard
+        # tensorboard = TensorBoard(log_dir='.\logs', histogram_freq=1, write_images=True)
+        dataset_path = '/tmp/Projects2021/rgbd_dataset/nyu_data/'
+        nyu2_dataset = nyu2_dataloader(dataset_path, 20, image_size=[128, 256, 3])
+        # nyu2_val = nyu2_dataloader(dataset_path, 20, image_size=[256, 256, 3])
+        # nyu2_val.val_setup(dataset_path)
+        checkpoint = ModelCheckpoint('res50_nyu_128x256.hdf5',
                                     monitor='loss',
                                     save_best_only=True)
 
-        m = res50(input_shape=(128, 128, 3))
+        m = res50_v2(input_shape=(128, 256, 3))
         m.model.compile(optimizer='adam', loss=ssmi_loss1)
         m.model.summary()
-        m.model.fit(dtloader, epochs=int(argv[2]), callbacks=[checkpoint])
+        m.model.fit(nyu2_dataset, epochs=int(argv[2]), callbacks=[checkpoint]) # ,validation_data=nyu2_val, tensorboard])
     else:
         print("\nPlease define the model you want to train and number of epochs!")
         print("Command Example: python3 train.py unet128 30\n")

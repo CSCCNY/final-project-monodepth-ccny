@@ -151,18 +151,29 @@ elif argv[1] == 'unet256':
             cv2.imwrite('res/d{0}.png'.format(i+1), np.array(img_predicted, dtype=np.int16))
     
 elif argv[1] == 'res50':
-    model =  keras.models.load_model('best_modelres50.hdf5')
-    dtloader = dataloader_rgbd(dataset_path, 8, image_size=128)
-    X_test, y_test = dtloader.get_testing_sample()
+    dataset_path = '/tmp/Projects2021/rgbd_dataset/nyu_data/'
+    model =  keras.models.load_model('res50_nyu_128x256.hdf5', compile=False)
+    data = nyu2_dataloader(dataset_path, 20, image_size=[256, 128, 3])
+    X_test, y_test = data.get_nyu2_test_data(dataset_path, num_of_images = 10)
     preds = model.predict(X_test)
-    prds1 = np.reshape(preds[0], newshape=(preds[0].shape[0]*preds[0].shape[1]))
-    plt.subplot(2,1,1)
-    pr = (np.reshape(prds1, newshape=(128, 128))*255)
-    plt.imshow(np.array(pr*255, dtype=np.int16))
-    plt.subplot(2,1,2)
-    plt.imshow(np.array(y_test[0]*255, dtype=np.int16))
-    plt.savefig('testres50.png', dpi=200, format='png')
-
+    for i in range(len(y_test)):
+        prds1 = np.reshape(preds[i], newshape=(preds[i].shape[0]*preds[i].shape[1]))
+        pr = (np.reshape(prds1, newshape=(128, 256))*255)
+#        img_predicted = np.zeros((128, 256, 3))
+#        img_predicted[:,:,0] = pr
+#        img_predicted[:,:,1] = pr
+#        img_predicted[:,:,2] = pr
+        
+        plt.subplot(1,2,1)
+        plt.imshow(np.array(pr, dtype=np.int16), cmap='magma') #, cmap ='CMRmap'
+        plt.title("Predicted Depth")
+        plt.axis('off')
+        
+        plt.subplot(1,2,2)
+        plt.title("True")
+        plt.axis('off')
+        plt.imshow(np.array(y_test[i]*255, dtype=np.int16), cmap='magma')
+        plt.savefig('resnet_res/plot_{0}.png'.format(i), dpi=200, format='png')
 else:
     print("Command received: ", argv[1])
     print("\nPlease define the model you want to test!\n")

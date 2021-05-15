@@ -35,4 +35,5 @@ venv/
 
 # Results Folder
 results/
+trained_models/
 >>>>>>> ehoxha

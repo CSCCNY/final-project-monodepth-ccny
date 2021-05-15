@@ -19,8 +19,8 @@ class res50_v2(object):
         return x
 
     def decoder_block(self, input, skip_features, num_filters):
-        x = UpSampling2D((2,2), interpolation='bilinear')(input)
-        #x = Conv2DTranspose(num_filters, (2, 2), strides=2, padding="same")(input)
+        #x = UpSampling2D((2,2), interpolation='bilinear')(input)
+        x = Conv2DTranspose(num_filters, (2, 2), strides=2, padding="same")(input)
         x = Concatenate()([x, skip_features])
         x = self.conv_block(x, num_filters)
         return x

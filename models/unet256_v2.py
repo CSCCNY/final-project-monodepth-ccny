@@ -7,7 +7,7 @@ import numpy as np
 import os
 import keras
 
-class unet256(object):
+class unet256_v2(object):
     def __init__(self, input_shape=[256, 256, 3]):
         self.model = self.UNet(in_shape = input_shape)
         
@@ -18,9 +18,7 @@ class unet256(object):
         conv1_layer = Conv2D(filters, 
                             kernel_size=kernel_s, 
                             padding=padding_, 
-                            strides=strides_,
-                            kernel_initializer='he_normal',
-                            kernel_regularizer=l2(1e-4))(x)
+                            strides=strides_)(x)
         
         x = BatchNormalization()(conv1_layer)
         x = Activation(activation_)(x)
@@ -28,9 +26,7 @@ class unet256(object):
         conv2_layer = Conv2D(filters, 
                             kernel_size=kernel_s, 
                             padding=padding_, 
-                            strides=strides_,
-                            kernel_initializer='he_normal',
-                            kernel_regularizer=l2(1e-4))(x)
+                            strides=strides_)(x)
         
         x = BatchNormalization()(conv2_layer)
         x = Activation(activation_)(x)
@@ -49,9 +45,7 @@ class unet256(object):
         conv1_layer = Conv2D(filters, 
                             kernel_size=kernel_s, 
                             padding=padding_, 
-                            strides=strides_,
-                            kernel_initializer='he_normal',
-                            kernel_regularizer=l2(1e-4))(concat1)
+                            strides=strides_)(concat1)
         
         x = BatchNormalization()(conv1_layer)
         x = Activation(activation_)(x)
@@ -59,9 +53,7 @@ class unet256(object):
         conv2_layer = Conv2D(filters, 
                             kernel_size=kernel_s, 
                             padding=padding_, 
-                            strides=strides_,
-                            kernel_initializer='he_normal',
-                            kernel_regularizer=l2(1e-4))(x)
+                            strides=strides_)(x)
         
         x = BatchNormalization()(conv2_layer)
         x = Activation(activation_)(x)

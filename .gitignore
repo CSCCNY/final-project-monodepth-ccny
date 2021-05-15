@@ -29,10 +29,13 @@ __pypackages__/
 .venv
 env/
 venv/
-<<<<<<< HEAD
-=======
-
 
 # Results Folder
 results/
->>>>>>> ehoxha
+trained_models/
+extrascripts/test_imgs.png
+res50_nyu_256x256.hdf5
+extrascripts/00000_depth.png
+extrascripts/1.png
+extrascripts/2.png
+extrascripts/bilinear_sampler_1d.py

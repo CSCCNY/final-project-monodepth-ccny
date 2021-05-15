@@ -32,3 +32,14 @@ cd final-project-monodepth-ccny
 pipenv install  # Installs dependencies
 pipenv shell  # Enter virtual environment
 ```
+
+#### Data Sources ####
+
+All benchmarks we performed over the course of the project were trained on NYU v2 dataset.
+Then evaluated on *NYU v2*, *Middlebury*, *DIML Indoor*, and *DIML Outdoor*. 
+Only the dedicated **test** portion of *NYU v2*, *DIML Indoor*, and *DIML Outdoor* was used for evaluation.
+In case with *Middlebury*, the entire dataset was used (less than 20 image - depth pairs).
+
+ - [NYU v2](https://cs.nyu.edu/~silberman/datasets/nyu_depth_v2.html) -- Default Indoor Set.
+ - [Middlebury](https://vision.middlebury.edu/stereo/data/) -- Still Objects.
+ - [DIML](https://dimlrgbd.github.io) -- Indoor and Outdoor.

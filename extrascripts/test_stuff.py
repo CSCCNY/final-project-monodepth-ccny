@@ -137,7 +137,6 @@ cv2.destroyAllWindows()
 # import cv2
 # import os
 
-
 # dataset_path = '/tmp/Projects2021/rgbd_dataset/nyu_data/'
 # dtloader = nyu2_dataloader(dataset_path, 8, image_size=[256, 128])
 # X_test, y_test = dtloader.get_testing_sample()

@@ -308,7 +308,7 @@ we noticed a few things:
    able to do well on the image with a human (Figure 8) is an exception.
    
  - CNNs tend to remember not just the objects, but the patterns of edges from the datasets they were trained on. This 
-    conjecture explains the fact thatbecause all the nets were trained on an indoor dataset (NYU v2) failed to do 
+    conjecture explains the fact that because all the nets were trained on an indoor dataset (NYU v2) failed to do 
    reasonable well on images containing trees from the DIML Outdoor set, though not without some exceptions.
      
  - What do the metrics really mean? The before mentioned metrics of satisfactory and decent in this context are not 
@@ -320,9 +320,11 @@ we noticed a few things:
     on NYU-v2. This could point towards the skewness of the evaluation data, as running the evaluation on the entire
    testing set was omitted due to the limited computational power and time.
 
-## Atributions ##
+## Attributions ##
 
-## Bibiliiography ##
+![Contributions](docs/contributions.png)
+
+## Bibliography ##
 [1] Gardner, Jonathan S, et al. “Vertical Position as a Cue to Pictorial Depth: Height in the Picture Plane versus Distance to the Horizon.” Attention, Perception & Psychophysics, U.S. National Library of Medicine, Feb. 2010, www.ncbi.nlm.nih.gov/pubmed/20139458.
 
 [2] Gupta, A., et al. “From 3D Scene Geometry to Human Workspace.” From 3D Scene Geometry to Human Workspace | Proceedings of the 2011 IEEE Conference on Computer Vision and Pattern Recognition, 1 June 2011, dl.acm.org/doi/10.1109/CVPR.2011.5995448.

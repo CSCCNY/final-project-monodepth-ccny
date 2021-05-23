@@ -1,5 +1,5 @@
 import tensorflow as tf
-from keras.layers import Conv2D, UpSampling2D, Concatenate, Dense, BatchNormalization, Dropout, MaxPool2D, Activation
+from keras.layers import Conv2D, UpSampling2D, Concatenate, Dense, BatchNormalization, Dropout, MaxPool2D, Activation, LeakyReLU
 from keras.regularizers import l2
 import cv2
 import matplotlib.pyplot as plt
@@ -21,7 +21,7 @@ class unet256_v2(object):
                             strides=strides_)(x)
         
         x = BatchNormalization()(conv1_layer)
-        x = Activation(activation_)(x)
+        x = LeakyReLU(alpha=0.2)(x)
         
         conv2_layer = Conv2D(filters, 
                             kernel_size=kernel_s, 
@@ -29,7 +29,7 @@ class unet256_v2(object):
                             strides=strides_)(x)
         
         x = BatchNormalization()(conv2_layer)
-        x = Activation(activation_)(x)
+        x = LeakyReLU(alpha=0.2)(x)
         
         pooling_layer = MaxPool2D((2,2), strides=(2,2))(x)
 
@@ -39,7 +39,7 @@ class unet256_v2(object):
                         padding_ = 'same', strides_ = 1, 
                         activation_ = 'relu'):
 
-        up_sampling_1 = UpSampling2D((2,2))(x)
+        up_sampling_1 = UpSampling2D((2,2), interpolation='bilinear')(x)
         concat1 = Concatenate()([up_sampling_1, skip])
 
         conv1_layer = Conv2D(filters, 
@@ -91,12 +91,12 @@ class unet256_v2(object):
         c3, p3 = self.down_block(p2, filters[2]) # 64  -> 32
         c4, p4 = self.down_block(p3, filters[3]) # 32  -> 16
         c5, p5 = self.down_block(p4, filters[4]) # 16  -> 8
-        c6, p6 = self.down_block(p5, filters[5]) # 8   -> 4
+        # c6, p6 = self.down_block(p5, filters[5]) # 8   -> 4
 
-        bn = self.bottleneck(p6, filters[6])
+        bn = self.bottleneck(p5, filters[4])
 
-        u1 = self.up_block(bn, c6, filters[5]) # 4   -> 8
-        u2 = self.up_block(u1, c5, filters[4]) # 8   -> 16
+        # u1 = self.up_block(bn, c6, filters[5]) # 4   -> 8
+        u2 = self.up_block(bn, c5, filters[4]) # 8   -> 16
         u3 = self.up_block(u2, c4, filters[3]) # 16  -> 32
         u4 = self.up_block(u3, c3, filters[2]) # 32  -> 64
         u5 = self.up_block(u4, c2, filters[1]) # 64  -> 128

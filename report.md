@@ -84,7 +84,29 @@ at various scales and orientations [30].
 
 #### A word on SLAM ####
 
-Ejup, help out here
+The most popular uses of the depth estimation techniques are attributed to SLAM algorithms.
+Simultaneous Localization And Mapping (SLAM) is the computational problem of constructing a map of
+an unknown environment, while simultaneously keeping track of an agent's location within it [31].
+SLAM problems can be categorized as Online SLAM, which tries to estimate the most recent pose of the agent,
+and Full/Offline SLAM, which approximates the path that the agent has travelled. Hence,
+to represent this in probabilistic terms, Online SLAM represents the distribution of a pose at time t on a map,
+given the observations and the controls.
+Instead of calculating the current pose, Full or Offline SLAM recalculates the entire trip [31].
+In terms of the algorithm, SLAM problems can be solved using
+Extended Kalman Filter (EKF), graph, or deep learning SLAM. EKF SLAM
+is the earliest and most influential algorithm for Online SLAM and
+uses maximum likelihood data association. Maps generated this way are feature-based,
+but often use artificial features as feature detectors can be computationally expensive.
+The algorithm relies on the assumption that the noise of the system is of the Gaussian form and non-linear
+models are linearized to suit it.
+Castellanos et al., Huang and Dissanayake, and Julier and Uhlmann showed that eventual
+inconsistency related to non-linearity is inevitable,
+but the efficacy is still a focus of many researchers [32, 33, 34].
+Graph SLAM on the other hand solves the problem of Full SLAM.
+It considers the constraints of the initial state of the autonomous vehicles and the map, the relative motion, and the relative measurements [31]. The name is coming from the fact that it is constructed as a graph problem, where each of the constraints mentioned represents an edge of the graph and each pose of the robot and landmark represents a vertex.
+Finally, in recent years many researchers started using deep learning techniques to help improve SLAM.
+Deep learning has been shown to be extremely useful for depth estimation, feature description, feature matching and extraction. Most of these innovative approaches are part of Graph SLAM, which help with increasing the accuracy of localization and mapping [35].
+Visual SLAM or V-SLAM has emerged as a solution to the localization and mapping issue with the use a standard camera. It can be categorized as sparse and dense based on how maps are generated; or direct and indirect based on whether it extracts features or recovers 3D information using optimization methods. Well-known feature extractors include SIFT, FAST, and ORB, and the latter was famously used in ORB-SLAM and its later versions [36, 37, 38, 39].
 
 ## Data ##
 

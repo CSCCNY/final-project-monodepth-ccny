@@ -158,7 +158,7 @@ A few words on encoder architectures below.
 Residual Network where each batch of convolutional layers has a skip connection to the 
 following batch of convolutional layers.
 
-![Figure2](docs/resnet-arch.png)
+![Figure2](docs/resnet-arch.png)  
 *Figure 2. ResNet*
 
 #### DenseNet169 ####
@@ -166,19 +166,19 @@ following batch of convolutional layers.
 DenseNet provides even more connection that ResNet, where each batch of convolutional layers has a skip connection 
 to each following batch of convolutional layers.
 
-![Figure3](docs/densenet-arch.png)
+![Figure3](docs/densenet-arch.png)  
 *Figure 3. ResNet*
 
 #### MobileNet ####
 
 MobileNet is distinguished by a mixture of depth-wise and point-wise convolutions following one another.
 
-![Figure4](docs/mobilenet-arch.png)
+![Figure4](docs/mobilenet-arch.png)  
 *Figure 4. MobileNet*
 
 #### UNet ####
 
-![Figure5](docs/unet-arch.png)
+![Figure5](docs/unet-arch.png)  
 *Figure 5. UNet*
 
 ## Evaluation ##
@@ -269,12 +269,34 @@ only DenseNet was able to make a fair depth prediction.
 ![Figure25](docs/bar-mse-unet.png)  
 *Figure 25. UNet Metrics.*
 
-#### Summary ####
+#### Metrics Summary ####
 
 ![Figure26](docs/bar-mse.png)  
 *Figure 26. Metrics Summary.*
 
 ## Conclusion ##
+
+Over the course of experimenting with various CNN architectures to estimate depth maps from RGB camera images,
+we noticed a few things:
+
+ - CNNs tend to remember the objects from the environments they are trained in. For instance, the depth estimation
+    model will fail to come up with a satisfactory depth prediction of an image containing a cat if the training
+    data does not contain cats. This can be seen from looking at predictions from the middlebury set -- most of the
+    scenery is indoors; however, very few images/objects get a decent depth map prediction. DenseNet being
+   able to do well on the image with a human (Figure 8) is an exception.
+   
+ - CNNs tend to remember not just the objects, but the patterns of edges from the datasets they were trained on. This 
+    conjecture explains the fact thatbecause all the nets were trained on an indoor dataset (NYU v2) failed to do 
+   reasonable well on images containing trees from the DIML Outdoor set, though not without some exceptions.
+     
+ - What do the metrics really mean? The before mentioned metrics of satisfactory and decent in this context are not 
+   related to the quantitative error, rather to the judgement of a human observer. Though, by looking at the MSE plots, 
+   we can visually check that Middlebury predictions are indeed worse than DIML Indoor predictions, but looking at the
+   number of MSE itself virtually does not give any useful information.
+   
+ - Surprisingly ResNet and MobileNet showed better MSE score on the DIML Indoor, even though all the models were trained
+    on NYU-v2. This could point towards the skewness of the evaluation data, as running the evaluation on the entire
+   testing set was omitted due to the limited computational power and time.
 
 ## Atributions ##
 

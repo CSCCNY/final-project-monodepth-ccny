@@ -23,7 +23,7 @@ repetitive patterns, and reflective or texture-less regions [10, 11].
 The underlying issue causing this is called non-uniqueness or ambiguity as seen in *Figure 1*
 and observed across all sciences, where a variety of bodies can produce an identical signal [12, 13]. 
 
-![Figure1](docs/figure1.png)
+![Figure1](docs/figure1.png)  
 *Figure 1. A line drawing on x-y axes without shades or shadows can only provide contour information (A). 
 While people may try to reconstruct the original object (B), 
 that is not always possible as many 3D scenes and objects correspond to an identical 2D projection (C).*
@@ -175,23 +175,23 @@ upsampling the encoded features. The decoder part consisted of either bilinear u
 convolutional layers (Conv2D) or transposed convolutional layers (Conv2DTranspose). 
 A few words on encoder architectures below.
 
-#### ResNet50 ####
+#### [ResNet](https://arxiv.org/pdf/1512.03385.pdf) ####
 
 Residual Network where each batch of convolutional layers has a skip connection to the 
-following batch of convolutional layers.
+following batch of convolutional layers. We used a generic ResNet-50 architecture.
 
 ![Figure2](docs/resnet-arch.png)  
 *Figure 2. ResNet*
 
-#### DenseNet169 ####
+#### [DenseNet](https://arxiv.org/pdf/1608.06993.pdf) ####
 
 DenseNet provides even more connection that ResNet, where each batch of convolutional layers has a skip connection 
-to each following batch of convolutional layers.
+to each following batch of convolutional layers. We used a generic DenseNet-169 architecture.
 
 ![Figure3](docs/densenet-arch.png)  
 *Figure 3. ResNet*
 
-#### MobileNet ####
+#### [MobileNet](https://arxiv.org/pdf/1704.04861.pdf) ####
 
 MobileNet is distinguished by a mixture of depth-wise and point-wise convolutions following one another.
 

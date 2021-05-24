@@ -1,5 +1,7 @@
 # Final Report - Monodepth #
 
+> Author - {Ejup Hoxha, Stanislav Sotnikov, Santosh Suwal}
+
 Monocular depth estimation is a novel problem in computer vision mainly applicable 
 in areas of robotics, autonomous driving, and medical imaging.
 The problem consists of predicting Depth (3D information) given a single view 2D RGB camera image.
@@ -193,7 +195,7 @@ to each following batch of convolutional layers.
 
 #### MobileNet ####
 
-MobileNet is distinguished by a mixture of depth-wise and point-wise convolutions following one another.
+MobileNet is distinguished by a mixture of depth-wise and point-wise convolutions following one another. One of the main difference among with this network is it uses SeparableConv2D in it's decoder enabling to use resources better and produce better performance on low power devices.
 
 ![Figure4](docs/mobilenet-arch.png)  
 *Figure 4. MobileNet*

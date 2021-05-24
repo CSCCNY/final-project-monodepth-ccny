@@ -1,6 +1,6 @@
 # Final Report - Monodepth #
 
-> Author - {Ejup Hoxha, Stanislav Sotnikov, Santosh Suwal}
+> Authors - {Ejup Hoxha, Stanislav Sotnikov, Santosh Suwal}
 
 Monocular depth estimation is a novel problem in computer vision mainly applicable 
 in areas of robotics, autonomous driving, and medical imaging.

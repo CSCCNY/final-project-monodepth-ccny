@@ -11,6 +11,10 @@ Team members:
 
 - [Santosh Suwal]( )
 
+## Final Report ##
+
+- [Final Report](report.md)
+
 
 ## Reading Materials ##
 

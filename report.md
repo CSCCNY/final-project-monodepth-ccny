@@ -202,6 +202,8 @@ MobileNet is distinguished by a mixture of depth-wise and point-wise convolution
 
 #### UNet ####
 
+Famous UNet architecture is used as a baseline model. The exact architecure is shown in *Figure 5*. Blue colored blocks are 2D convolution blocks or *Conv2D*, with specified number of filters, kernel size of *3x3*, no padding and with a stride of 1. After each 2D convolution comes *BatchNormalization* and *ReLU Activation*. Orange blocks represent down-sampling using *MaxPooling*. The smallest resolution inside the model reaches *8x8*. Red block represent bilinear up-sampling. Finally, the green layer is the output which goes through sigmoid function.
+
 ![Figure5](docs/unet-arch.png)  
 *Figure 5. UNet*
 
